@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/common.css">
+    </head>
+    <body>
+        <div class="application-container">
+            <%- include("partials/navbar.ejs") %>
+            <main id="main">
+                <!-- Here to place a table with tasks -->
+                <h2>Content</h2>
+                <form method="post" action="updateContent?id=<%=task.id_task%>">
+                    <div class="form-group">
+                        <label for="textAreaTitle" class="form-label mt-4">Title</label>
+                        <textarea class="form-control" id="textAreaTitle" name="title" rows="8"><%=task.title %></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="textAreaDescription" class="form-label mt-4">Description</label>
+                        <textarea class="form-control" id="textAreaDescription" name="description" rows="8"><%=task.description%></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="statusSelect" class="form-label mt-4">Status</label>
+                        <select class="form-select" id="statusSelect" name="status">
+                          <option value="completed" <% if(task.status === 'completed') { %> selected <% } %> >completed</option>
+                          <option value="uncompleted" <% if(task.status === 'uncompleted') { %> selected <% } %>>uncompleted</option>
+                          <option value="refused" <% if(task.status === 'refused') { %> selected <% } %>>refused</option>
+                        </select>
+                    <div class="form-group">
+                        <label for="timeExpired">Time Expired</label>
+                        <input type="datetime-local" id="timeExpired" name="timeExpired"
+                               value="<%=formateDate(task.time_expired) %>"
+                               min="<%=formateDate(task.time_created) %>" max="2099-12-31T23:59">
+                    </div>
+                    <button type="submit" class="btn btn-dark js-button-upload-file">Submit content</button>                    
+                </form>
+                
+                <h2 style="margin-top: 25px;">Files</h2>
+                <form method="post" action="deleteFiles?id=<%=task.id_task%>">
+                    <div class="list-group">
+                        <%const attached_files = JSON.parse(task.attached_files)%>
+                        <%if (attached_files) { %>
+                        <%for (const file of attached_files) {%>
+                            <div class="list-group-item list-group-item-action" style="display: inline-block;">
+                                <input class="form-check-input" type="checkbox" value="<%=file?.id_file %>" name="selectedFiles">
+                                <span><%=file.name_user%><span>
+                            </div>    
+                        <%} %>
+                        <%} %>
+                    </div>
+                    <button type="submit" class="btn btn-dark" style="display:<%= attached_files?'block':'none'%>;">Delete selected files</button>
+                    <%if (!attached_files) { %>
+                        <p class="lead">No attached files</p>
+                    <%} %>
+                </form>
+                
+                <form method="post" action="uploadFile?id=<%=task.id_task%>" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="formFile" class="form-label mt-4">Selected file to upload</label>
+                        <input class="form-control" type="file" id="formFile" name="formFile">
+                    </div>
+                    <button type="submit" class="btn btn-dark">Upload selected file</button>
+                </form>
+            </main>
+            <%- include("partials/footer.ejs") %>
+        </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</html>

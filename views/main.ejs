@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/common.css">   
+    </head>
+    <body>
+        <div class="application-container">
+            <%- include("partials/navbar.ejs") %>
+            <main id="main">
+                <!-- Here to place a table with tasks -->
+                <div style="margin: 5px 0 5px 0;">
+                    <a  href="/new" class="btn btn-dark">New</a>
+                    <a  href="#" class="btn btn-dark">Filter</a>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">TO EDIT CLICK</th>
+                        <th scope="col">TITLE</th>
+                        <th scope="col">DESCRIPTION</th>
+                        <th scope="col">TIME CREATED</th>
+                        <th scope="col">TIME EXPIRED</th>
+                        <th scope="col">STATUS</th>
+                        <th scope="col">ATTACHED FILES</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <%let isLight = true%>
+                        <%if (tasks) { %>
+                        <%for(let task of tasks) {%>
+                            <tr data-id-task = "<%=task?.id_task %>" class = "<%= isLight?'table-light':'table-dark'  %>" >
+                                <th>
+                                    <a href="/edit?id=<%=task?.id_task %>" class = "btn btn-primary" style="display: inline-block;">EDIT</a>
+                                    <form method="post" action="deleteTask?id=<%=task?.id_task %>" style="display: inline-block;">
+                                        <input type="submit" class = "btn btn-primary" value="DELETE"></input>
+                                    </form>
+                                </th> 
+                                <td><%= task?.title %></td>
+                                <td><%= task?.description %></td>
+                                <td><%= formateDate(task?.time_created) %></td>
+                                <td><%= formateDate(task?.time_expired) %></td>
+                                <td><%= task?.status %></td>
+                                <td>
+                                    <div class="list-group">
+                                        <%let attached_files = JSON.parse(task.attached_files)%>
+                                        <%if (attached_files) {%>
+                                        <%for(let file of attached_files) {%>
+                                            <a href="downloadFile?id=<%= file?.id_file %>" class="list-group-item list-group-item-action js-button-file-download">
+                                                <span class="bi bi-file"></span>
+                                                <span><%=file.name_user%><span>
+                                            </a>
+                                        <%} %>    
+                                        <%} %>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% isLight = !isLight %>
+                        <%} %>
+                        <%} %>
+                    </tbody>
+                  </table>
+            </main>
+            <%- include("partials/footer.ejs") %>
+        </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src = "js/main.js"></script>    
+</html>
