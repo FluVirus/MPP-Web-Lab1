@@ -2,8 +2,8 @@ const fs = require("fs-extra");
 const dao = require("../model/db/dbdao");
 const formatters = require('../model/formatters/formatters');
 
-module.exports.details = function(request, response) {
-
+module.exports.about = function(request, response) {
+	response.render("about.ejs");
 }
 
 module.exports.main = function(request, response) {

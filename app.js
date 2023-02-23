@@ -27,7 +27,7 @@ app.post("/deleteTask", urlParser, controllerMain.deleteTask);
 
 app.get("/edit", controllerMain.edit);
 app.get("/new", controllerMain.new);
-//app.get("/details", controllerMain.details);
+app.get("/about", controllerMain.about);
 app.get("/", controllerMain.main);
 
 app.get('*', controllerMain.notFound);
